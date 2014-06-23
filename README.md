@@ -1,1 +1,1 @@
-A bucket list app designed for couples that focuses on votes, smart ranking and intimate interaction
+A bucket list app designed for couples that focuses on voting, smart ranking and intimate interaction

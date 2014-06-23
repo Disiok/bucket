@@ -2,7 +2,6 @@ package com.sporkinnovations.bucket;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,33 +18,63 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	ActionBar mActionBar;
+	// Views
 	BucketView mBucketView;
 	TextView mVotePowerView;
+	
+	AlertDialog.Builder mNewWishDialog;
+	
+	// Adapters
 	BucketAdapter mBucketAdapter;
 
+	// Models
 	Bucket mBucket;
 	VoteManager mVoteManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Setting main activity layout
 		setContentView(R.layout.activity_main);
 
+		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
+		
+		// Initializing
 		init();
-
 	}
 
-	protected void init() {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_new:
+			showNewWishDialog();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void init() {
+		// Creating model instances
 		mBucket = new Bucket();
 		mVoteManager = new VoteManager();
 		
+		setupNewWishDialog();
 		refreshVotePowerIndicator();
 
-		mBucketAdapter = new BucketAdapter(this,
-				android.R.layout.simple_list_item_1, mBucket.getWishes());
+		mBucketAdapter = new BucketAdapter(this, android.R.layout.simple_list_item_1, mBucket.getWishes());
 
 		mBucketView.setAdapter(mBucketAdapter);
 		mBucketView.setOnItemClickListener(new OnItemClickListener() {
@@ -94,30 +123,15 @@ public class MainActivity extends Activity {
 		mVotePowerView.setText("Vote Power: " + (int) (mVoteManager.getVotePower() * 100) + "%");
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu items for use in the action bar
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_actions, menu);
-		return super.onCreateOptionsMenu(menu);
+	private void showNewWishDialog() {
+		mNewWishDialog.show();
 	}
+	
+	private void setupNewWishDialog() {
+		// Creating instance
+		mNewWishDialog = new AlertDialog.Builder(this);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle presses on the action bar items
-		switch (item.getItemId()) {
-		case R.id.action_new:
-			newWish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void newWish() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-		alert.setTitle("New Wish");
+		mNewWishDialog.setTitle("New Wish");
 
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
@@ -125,15 +139,14 @@ public class MainActivity extends Activity {
 		frame.setPadding(50, 25, 50, 0);
 		frame.addView(input);
 		
-		alert.setView(frame);
+		mNewWishDialog.setView(frame);
 
-		alert.setNegativeButton("Cancel",
+		mNewWishDialog.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-					}
+					public void onClick(DialogInterface dialog, int whichButton) {}
 				});
 
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		mNewWishDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String message = input.getText().toString();
 				Wish wish = new Wish(message);
@@ -144,6 +157,5 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		alert.show();
 	}
 }
