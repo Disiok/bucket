@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+
 public class MainActivity extends Activity {
 
 	// Views
@@ -41,6 +44,9 @@ public class MainActivity extends Activity {
 		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
+		
+		// Setup Parse
+		Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
 		
 		// Initializing
 		init();
