@@ -22,8 +22,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mActionBar = getActionBar();
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
+		
+		init();
 		
 	}
 	protected void init() {

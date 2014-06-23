@@ -7,8 +7,6 @@
     <com.sporkinnovations.bucket.BucketView
         android:id="@+id/bucket_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-    </com.sporkinnovations.bucket.BucketView>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
