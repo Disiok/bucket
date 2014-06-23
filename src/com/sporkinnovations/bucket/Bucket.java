@@ -1,6 +1,7 @@
 package com.sporkinnovations.bucket;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Bucket {
 	ArrayList<Wish> mWishes;
@@ -19,5 +20,9 @@ public class Bucket {
 	
 	public void addWish(Wish wish) {
 		mWishes.add(wish);
+	}
+	@SuppressWarnings("unchecked")
+	public void sortWishes() {
+		Collections.sort(mWishes);
 	}
 }

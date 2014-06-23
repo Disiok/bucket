@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
 
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onAnimationEnd(Animator animation) {
+								mBucket.sortWishes();
 								mBucketAdapter.notifyDataSetChanged();
 
 							}
@@ -111,7 +113,11 @@ public class MainActivity extends Activity {
 
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
-		alert.setView(input);
+		final FrameLayout frame = new FrameLayout(this);
+		frame.setPadding(50, 50, 50, 0);
+		frame.addView(input);
+		
+		alert.setView(frame);
 
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
@@ -124,6 +130,7 @@ public class MainActivity extends Activity {
 				String message = input.getText().toString();
 				Wish wish = new Wish(message);
 				mBucket.addWish(wish);
+				mBucket.sortWishes();
 				mBucketAdapter.notifyDataSetChanged();
 			}
 		});

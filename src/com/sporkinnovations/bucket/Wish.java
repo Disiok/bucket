@@ -2,7 +2,7 @@ package com.sporkinnovations.bucket;
 
 import java.util.ArrayList;
 
-public class Wish {
+public class Wish implements Comparable{
 	String mMessage;
 	ArrayList<Vote> mVotes;
 	
@@ -28,5 +28,13 @@ public class Wish {
 			sum += 1f / vote.getInstances();
 		}
 		return sum;
+	}
+
+	@Override
+	public int compareTo(Object another) {
+		Wish otherWish = (Wish) another;
+		int compareScore = (int) ((otherWish.getTotalVoteValue() - getTotalVoteValue()) * 1000);
+		System.out.println(compareScore);
+		return compareScore;
 	}
 }
