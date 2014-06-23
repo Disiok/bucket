@@ -11,9 +11,13 @@ public class Bucket {
 		mWishes.add(new Wish("Guu Izakaya"));
 		mWishes.add(new Wish("Sky diving"));
 		mWishes.add(new Wish("Lamb Kabob"));
+		
 	}
-	public Wish[] getWishes() {
-		Wish[] wishes = new Wish[] {};
-		return mWishes.toArray(wishes);
+	public ArrayList<Wish> getWishes() {
+		return mWishes;
+	}
+	
+	public void addWish(Wish wish) {
+		mWishes.add(wish);
 	}
 }
