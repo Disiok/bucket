@@ -76,11 +76,52 @@ public class MainActivity extends Activity {
 		// Creating model instances
 		mBucket = new Bucket();
 		mVoteManager = new VoteManager();
-		
+		mBucketAdapter = new BucketAdapter(this, android.R.layout.simple_list_item_1, mBucket.getWishes());
+
+		setupBucketView();
 		setupNewWishDialog();
 		refreshVotePowerIndicator();
+	}
 
-		mBucketAdapter = new BucketAdapter(this, android.R.layout.simple_list_item_1, mBucket.getWishes());
+	private void refreshVotePowerIndicator() {
+		mVotePowerView.setText("Vote Power: " + (int) (mVoteManager.getVotePower() * 100) + "%");
+	}
+
+	private void showNewWishDialog() {
+		mNewWishDialog.show();
+	}
+	
+	private void setupNewWishDialog() {
+		// Creating instance
+		mNewWishDialog = new AlertDialog.Builder(this);
+
+		mNewWishDialog.setTitle("New Wish");
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		final FrameLayout frame = new FrameLayout(this);
+		frame.setPadding(50, 25, 50, 0);
+		frame.addView(input);
+		
+		mNewWishDialog.setView(frame);
+
+		mNewWishDialog.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {}
+				});
+
+		mNewWishDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String message = input.getText().toString();
+				Wish wish = new Wish(message);
+				mBucket.addWish(wish);
+				mBucket.sortWishes();
+				mBucketAdapter.notifyDataSetChanged();
+				refreshVotePowerIndicator();
+			}
+		});
+	}
+	private void setupBucketView() {
 
 		mBucketView.setAdapter(mBucketAdapter);
 		mBucketView.setOnItemClickListener(new OnItemClickListener() {
@@ -123,45 +164,5 @@ public class MainActivity extends Activity {
 			}
 
 		});
-	}
-
-	private void refreshVotePowerIndicator() {
-		mVotePowerView.setText("Vote Power: " + (int) (mVoteManager.getVotePower() * 100) + "%");
-	}
-
-	private void showNewWishDialog() {
-		mNewWishDialog.show();
-	}
-	
-	private void setupNewWishDialog() {
-		// Creating instance
-		mNewWishDialog = new AlertDialog.Builder(this);
-
-		mNewWishDialog.setTitle("New Wish");
-
-		// Set an EditText view to get user input
-		final EditText input = new EditText(this);
-		final FrameLayout frame = new FrameLayout(this);
-		frame.setPadding(50, 25, 50, 0);
-		frame.addView(input);
-		
-		mNewWishDialog.setView(frame);
-
-		mNewWishDialog.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {}
-				});
-
-		mNewWishDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				String message = input.getText().toString();
-				Wish wish = new Wish(message);
-				mBucket.addWish(wish);
-				mBucket.sortWishes();
-				mBucketAdapter.notifyDataSetChanged();
-				refreshVotePowerIndicator();
-			}
-		});
-
 	}
 }
