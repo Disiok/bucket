@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 				Wish clickedWish = (Wish) parent.getItemAtPosition(position);
 				clickedWish.addVote(mVoteManager.getVote());
 				view.setAlpha(0);
-				view.animate().alpha(1)
+				view.animate().alpha(1).setDuration(100)
 						.setListener(new AnimatorListener() {
 
 							@Override

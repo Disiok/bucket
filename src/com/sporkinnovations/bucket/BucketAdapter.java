@@ -22,8 +22,10 @@ public class BucketAdapter extends ArrayAdapter{
 		Wish currentWish = (Wish) this.getItem(position);
 		if (currentWish.hasVote()) {
 			float saturation = currentWish.getTotalVoteValue();
-			view.setText(currentWish.toString() + " : " + saturation);
-			float[] color = new float[] {0, saturation, 1f};
+			String displayText = currentWish.toString() + (Flags.DEBUG ? " : " + saturation : "");
+			view.setText(displayText);
+			
+			float[] color = new float[] {0, saturation * Constants.SATURATION_FACTOR, Constants.VALUE_FACTOR};
 			view.setBackgroundColor(Color.HSVToColor(color));
 		}
 		return view;
