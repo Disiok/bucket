@@ -15,11 +15,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 	ActionBar mActionBar;
 	BucketView mBucketView;
+	TextView mVotePowerView;
 	BucketAdapter mBucketAdapter;
 
 	Bucket mBucket;
@@ -31,7 +33,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
-
+		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
 		init();
 
 	}
@@ -39,6 +41,8 @@ public class MainActivity extends Activity {
 	protected void init() {
 		mBucket = new Bucket();
 		mVoteManager = new VoteManager();
+		
+		refreshVotePowerIndicator();
 
 		mBucketAdapter = new BucketAdapter(this,
 				android.R.layout.simple_list_item_1, mBucket.getWishes());
@@ -65,7 +69,7 @@ public class MainActivity extends Activity {
 							public void onAnimationEnd(Animator animation) {
 								mBucket.sortWishes();
 								mBucketAdapter.notifyDataSetChanged();
-
+								refreshVotePowerIndicator();
 							}
 
 							@Override
@@ -84,6 +88,10 @@ public class MainActivity extends Activity {
 			}
 
 		});
+	}
+
+	private void refreshVotePowerIndicator() {
+		mVotePowerView.setText("Vote Power: " + (int) (mVoteManager.getVotePower() * 100) + "%");
 	}
 
 	@Override
@@ -114,7 +122,7 @@ public class MainActivity extends Activity {
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		final FrameLayout frame = new FrameLayout(this);
-		frame.setPadding(50, 50, 50, 0);
+		frame.setPadding(50, 25, 50, 0);
 		frame.addView(input);
 		
 		alert.setView(frame);
@@ -132,6 +140,7 @@ public class MainActivity extends Activity {
 				mBucket.addWish(wish);
 				mBucket.sortWishes();
 				mBucketAdapter.notifyDataSetChanged();
+				refreshVotePowerIndicator();
 			}
 		});
 

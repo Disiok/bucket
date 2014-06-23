@@ -10,4 +10,8 @@ public class VoteManager {
 		mVote.addInstance();
 		return mVote;
 	}
+	public float getVotePower() {
+		
+		return 1f / (mVote.getInstances() + 1);
+	}
 }

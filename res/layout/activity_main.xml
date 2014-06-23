@@ -1,12 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
     
     <com.sporkinnovations.bucket.BucketView
         android:id="@+id/bucket_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight=".9" />
+    <TextView 
+        android:id="@+id/bucket_vote_power_indicator"
+        android:layout_width="match_parent"
+        android:textSize="20sp"
+        android:background="#80101010"
+        android:textColor="#ffffffff"
+        android:gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight=".1"/>
+    
 
-</RelativeLayout>
+</LinearLayout>
