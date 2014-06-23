@@ -6,4 +6,9 @@ public class Wish {
 	public Wish(String message) {
 		mMessage = message;
 	}
+	
+	@Override
+	public String toString() {
+		return mMessage;
+	}
 }
