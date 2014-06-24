@@ -18,15 +18,16 @@ import android.widget.TextView;
 
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
 
 public class MainActivity extends Activity {
 
 	// Views
 	BucketView mBucketView;
 	TextView mVotePowerView;
-	
+
 	AlertDialog.Builder mNewWishDialog;
-	
+
 	// Adapters
 	BucketAdapter mBucketAdapter;
 
@@ -37,17 +38,18 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Setting main activity layout
 		setContentView(R.layout.activity_main);
 
 		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
-		
+
 		// Setup Parse
+		Parse.enableLocalDatastore(this);
 		Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
-		
+
 		// Initializing
 		init();
 	}
@@ -76,22 +78,19 @@ public class MainActivity extends Activity {
 		// Creating model instances
 		mBucket = new Bucket();
 		mVoteManager = new VoteManager();
-		mBucketAdapter = new BucketAdapter(this, android.R.layout.simple_list_item_1, mBucket.getWishes());
+		mBucketAdapter = new BucketAdapter(this,
+				android.R.layout.simple_list_item_1, mBucket.getWishes());
 
 		setupBucketView();
-		setupNewWishDialog();
 		refreshVotePowerIndicator();
 	}
 
 	private void refreshVotePowerIndicator() {
-		mVotePowerView.setText("Vote Power: " + (int) (mVoteManager.getVotePower() * 100) + "%");
+		mVotePowerView.setText("Vote Power: "
+				+ (int) (mVoteManager.getVotePower() * 100) + "%");
 	}
 
 	private void showNewWishDialog() {
-		mNewWishDialog.show();
-	}
-	
-	private void setupNewWishDialog() {
 		// Creating instance
 		mNewWishDialog = new AlertDialog.Builder(this);
 
@@ -102,25 +101,29 @@ public class MainActivity extends Activity {
 		final FrameLayout frame = new FrameLayout(this);
 		frame.setPadding(50, 25, 50, 0);
 		frame.addView(input);
-		
+
 		mNewWishDialog.setView(frame);
 
 		mNewWishDialog.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {}
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
 				});
 
-		mNewWishDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				String message = input.getText().toString();
-				Wish wish = new Wish(message);
-				mBucket.addWish(wish);
-				mBucket.sortWishes();
-				mBucketAdapter.notifyDataSetChanged();
-				refreshVotePowerIndicator();
-			}
-		});
+		mNewWishDialog.setPositiveButton("Ok",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String message = input.getText().toString();
+						Wish wish = new Wish(message);
+						mBucket.addWish(wish);
+						mBucket.sortWishes();
+						mBucketAdapter.notifyDataSetChanged();
+						refreshVotePowerIndicator();
+					}
+				});
+		mNewWishDialog.show();
 	}
+
 	private void setupBucketView() {
 
 		mBucketView.setAdapter(mBucketAdapter);
