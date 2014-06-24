@@ -15,10 +15,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 
@@ -46,12 +50,18 @@ public class MainActivity extends Activity {
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
 
-		// Setup Parse
-		Parse.enableLocalDatastore(this);
-		Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
-
 		// Initializing
 		init();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 	}
 
 	@Override
@@ -82,6 +92,7 @@ public class MainActivity extends Activity {
 				android.R.layout.simple_list_item_1, mBucket.getWishes());
 
 		setupBucketView();
+		mBucket.load(this, mBucketAdapter);
 		refreshVotePowerIndicator();
 	}
 
@@ -115,6 +126,7 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String message = input.getText().toString();
 						Wish wish = new Wish(message);
+						wish.save(getApplicationContext());
 						mBucket.addWish(wish);
 						mBucket.sortWishes();
 						mBucketAdapter.notifyDataSetChanged();
