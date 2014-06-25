@@ -54,7 +54,7 @@ public class Wish implements Comparable{
 		parseWish.put("message", mMessage);
 		parseWish.put("user", ParseUser.getCurrentUser());
 		
-		parseWish.saveInBackground(new SaveCallback() {
+		parseWish.saveEventually(new SaveCallback() {
 
 			@Override
 			public void done(ParseException error) {
