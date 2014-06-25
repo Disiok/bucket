@@ -15,14 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 
@@ -86,7 +78,7 @@ public class MainActivity extends Activity {
 
 	private void init() {
 		// Creating model instances
-		mBucket = new Bucket();
+		mBucket = new Bucket(this);
 		mVoteManager = new VoteManager();
 		mBucketAdapter = new BucketAdapter(this,
 				android.R.layout.simple_list_item_1, mBucket.getWishes());
