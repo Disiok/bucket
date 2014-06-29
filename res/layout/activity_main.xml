@@ -4,21 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <com.sporkinnovations.bucket.BucketView
         android:id="@+id/bucket_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".9" />
-    <TextView 
+        android:layout_weight=".8" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Facebook Login"
+        android:layout_gravity="center"
+        android:layout_weight=".1" />
+
+    <TextView
         android:id="@+id/bucket_vote_power_indicator"
         android:layout_width="match_parent"
-        android:textSize="20sp"
-        android:background="#80101010"
-        android:textColor="#ffffffff"
-        android:gravity="center"
         android:layout_height="0dp"
-        android:layout_weight=".1"/>
-    
+        android:layout_weight=".1"
+        android:background="#80101010"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="20sp" />
 
 </LinearLayout>
