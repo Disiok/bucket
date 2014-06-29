@@ -1,26 +1,14 @@
 package com.sporkinnovations.bucket;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -30,7 +18,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -57,7 +49,7 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-	
+
 	private Button mFacebookLoginButton;
 
 	@Override
@@ -65,7 +57,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
-	    
+
 		// Find the Facebook login button
 		mFacebookLoginButton = (Button) findViewById(R.id.facebook_login);
 		setupFacebookLoginButton();
@@ -248,9 +240,9 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 		}
-		
+
 	}
-	
+
 	public void setupFacebookLoginButton() {
 		final Activity activity = this;
 		mFacebookLoginButton.setOnClickListener(new OnClickListener() {
@@ -262,16 +254,28 @@ public class LoginActivity extends Activity {
 						if (user == null) {
 							Log.d("MyApp",
 									"Uh oh. The user cancelled the Facebook login.");
-						} else if (user.isNew()) {
-							Log.d("MyApp",
-									"User signed up and logged in through Facebook!");
 						} else {
-							Log.d("MyApp", "User logged in through Facebook!");
+							if (user.isNew()) {
+								Log.d("MyApp",
+										"User signed up and logged in through Facebook!");
+							} else {
+								Log.d("MyApp",
+										"User logged in through Facebook!");
+							}
+							Intent intent = new Intent(activity, MainActivity.class);
+							activity.startActivity(intent);
+							
 						}
 					}
 				});
 
 			}
 		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
 }
