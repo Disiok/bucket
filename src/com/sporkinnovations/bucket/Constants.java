@@ -6,7 +6,6 @@ public class Constants {
 	
 	public static final String FACEBOOK_APP_ID = "317929748382071";
 
-	public static final String CURRENT_USER = "Disiok";
 	public static final float SATURATION_FACTOR = 0.6f;
 	public static final float VALUE_FACTOR = 0.9f;
 }

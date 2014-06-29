@@ -54,7 +54,7 @@ public class Bucket {
 					}
 					bucketAdapter.notifyDataSetChanged();
 				} else {
-					Toast.makeText(context, "Loading failed", Toast.LENGTH_LONG)
+					Toast.makeText(context, "Loading failed" + error.getMessage(), Toast.LENGTH_LONG)
 							.show();
 				}
 

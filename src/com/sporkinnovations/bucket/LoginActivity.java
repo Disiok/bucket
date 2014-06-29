@@ -1,19 +1,36 @@
 package com.sporkinnovations.bucket;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -21,16 +38,9 @@ import android.widget.TextView;
  */
 public class LoginActivity extends Activity {
 	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_EMAIL = "com.sporkinnovations.bucket.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -47,12 +57,18 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	
+	private Button mFacebookLoginButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
+	    
+		// Find the Facebook login button
+		mFacebookLoginButton = (Button) findViewById(R.id.facebook_login);
+		setupFacebookLoginButton();
 
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
@@ -207,13 +223,7 @@ public class LoginActivity extends Activity {
 				return false;
 			}
 
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
+			// TODO: check for account matches
 
 			// TODO: register the new account here.
 			return true;
@@ -238,5 +248,30 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 		}
+		
+	}
+	
+	public void setupFacebookLoginButton() {
+		final Activity activity = this;
+		mFacebookLoginButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ParseFacebookUtils.logIn(activity, new LogInCallback() {
+					@Override
+					public void done(ParseUser user, ParseException arg1) {
+						if (user == null) {
+							Log.d("MyApp",
+									"Uh oh. The user cancelled the Facebook login.");
+						} else if (user.isNew()) {
+							Log.d("MyApp",
+									"User signed up and logged in through Facebook!");
+						} else {
+							Log.d("MyApp", "User logged in through Facebook!");
+						}
+					}
+				});
+
+			}
+		});
 	}
 }

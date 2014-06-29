@@ -1,10 +1,5 @@
 package com.sporkinnovations.bucket;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
@@ -12,25 +7,23 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.parse.ParseFacebookUtils;
 
 public class MainActivity extends Activity {
 
 	// Views
 	BucketView mBucketView;
 	TextView mVotePowerView;
-	Button mLoginButton;
 
 	AlertDialog.Builder mNewWishDialog;
 
@@ -51,7 +44,6 @@ public class MainActivity extends Activity {
 		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
-		mLoginButton = (Button) findViewById(R.id.login_button);
 
 		// Initializing
 		init();
@@ -95,7 +87,6 @@ public class MainActivity extends Activity {
 				android.R.layout.simple_list_item_1, mBucket.getWishes());
 
 		setupBucketView();
-		setupLoginButton();
 		mBucket.load(this, mBucketAdapter);
 		refreshVotePowerIndicator();
 	}
@@ -183,31 +174,6 @@ public class MainActivity extends Activity {
 			}
 
 		});
-	}
-
-	private void setupLoginButton() {
-		final Activity activity = this;
-		mLoginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				ParseFacebookUtils.logIn(activity, new LogInCallback() {
-					@Override
-					public void done(ParseUser user, ParseException arg1) {
-						if (user == null) {
-							Log.d("MyApp",
-									"Uh oh. The user cancelled the Facebook login.");
-						} else if (user.isNew()) {
-							Log.d("MyApp",
-									"User signed up and logged in through Facebook!");
-						} else {
-							Log.d("MyApp", "User logged in through Facebook!");
-						}
-					}
-				});
-
-			}
-		});
-
 	}
 
 	@Override

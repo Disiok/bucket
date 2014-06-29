@@ -13,7 +13,7 @@ public class BucketApplication extends Application {
 		// Initialize Parse
 		Parse.enableLocalDatastore(this);
 		Parse.initialize(this, Constants.APPLICATION_ID, Constants.CLIENT_KEY);
-		ParseFacebookUtils.initialize("YOUR FACEBOOK APP ID");
-		ParseUser.enableAutomaticUser();
+		ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
+		// ParseUser.enableAutomaticUser();
 	}
 }

@@ -3,8 +3,10 @@ package com.sporkinnovations.bucket;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.internal.Logger;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -45,7 +47,6 @@ public class Wish implements Comparable{
 	public int compareTo(Object another) {
 		Wish otherWish = (Wish) another;
 		int compareScore = (int) ((otherWish.getTotalVoteValue() - getTotalVoteValue()) * 1000);
-		System.out.println(compareScore);
 		return compareScore;
 	}
 	
