@@ -4,5 +4,6 @@
     <string name="app_name">Bucket</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_new">New Wish</string>
+    <string name="facebook_app_id">317929748382071</string>
 
 </resources>
