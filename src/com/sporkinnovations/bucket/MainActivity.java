@@ -1,5 +1,7 @@
 package com.sporkinnovations.bucket;
 
+import com.parse.ParseUser;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
@@ -10,8 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -21,6 +26,10 @@ public class MainActivity extends Activity {
 	// Views
 	BucketView mBucketView;
 	TextView mVotePowerView;
+	
+	// Temporary
+	Button mLogoutButton;
+	Button mDeleteWishButton;
 
 	AlertDialog.Builder mNewWishDialog;
 
@@ -30,6 +39,7 @@ public class MainActivity extends Activity {
 	// Models
 	Bucket mBucket;
 	VoteManager mVoteManager;
+	SessionManager mSessionManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +48,15 @@ public class MainActivity extends Activity {
 		// Setting main activity layout
 		setContentView(R.layout.activity_main);
 		
-		SessionManager sessionManager = new SessionManager(this);
-		sessionManager.checkLogin();
+		mSessionManager = new SessionManager(this);
+		mSessionManager.checkLogin();
 		
 		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
+		
+		mLogoutButton = (Button) findViewById(R.id.log_out_button);
+		mDeleteWishButton = (Button) findViewById(R.id.delete_wish_button);
 
 		// Initializing
 		init();
@@ -89,6 +102,16 @@ public class MainActivity extends Activity {
 		setupBucketView();
 		mBucket.load(this, mBucketAdapter);
 		refreshVotePowerIndicator();
+		
+		mLogoutButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				logOut();
+				mSessionManager.checkLogin();
+			}
+			
+		});
 	}
 
 	private void refreshVotePowerIndicator() {
@@ -132,7 +155,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void setupBucketView() {
-
+		final Activity activity = this;
 		mBucketView.setAdapter(mBucketAdapter);
 		mBucketView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -174,5 +197,21 @@ public class MainActivity extends Activity {
 			}
 
 		});
+		mBucketView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Wish clickedWish = (Wish) parent.getItemAtPosition(position);
+				clickedWish.delete(activity);
+				mBucket.remove(position);
+				mBucketAdapter.notifyDataSetChanged();
+				return true;
+			}
+			
+		});
+	}
+	private void logOut() {
+		ParseUser.logOut();
 	}
 }

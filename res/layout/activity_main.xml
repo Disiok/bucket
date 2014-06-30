@@ -9,7 +9,26 @@
         android:id="@+id/bucket_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".9" />
+        android:layout_weight=".8" />
+    
+    <LinearLayout
+        android:id="@+id/utility_row"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1">
+        <Button 
+            android:id="@+id/log_out_button"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Log out"/>
+        <Button 
+            android:id="@+id/delete_wish_button"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Delete wish"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/bucket_vote_power_indicator"

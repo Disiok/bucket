@@ -21,6 +21,12 @@ public class Wish implements Comparable{
 		mVotes = new ArrayList<Vote>();
 	}
 	
+	public Wish(String message) {
+		mMessage = message;
+		mVotes = new ArrayList<Vote>();
+	}
+	
+	
 	@Override
 	public String toString() {
 		return mMessage;
@@ -51,11 +57,11 @@ public class Wish implements Comparable{
 	}
 	
 	public void save(final Context context) {
-		ParseObject parseWish = new ParseObject("Wish");
-		parseWish.put("message", mMessage);
-		parseWish.put("user", ParseUser.getCurrentUser());
+		mParseWish = new ParseObject("Wish");
+		mParseWish.put("message", mMessage);
+		mParseWish.put("user", ParseUser.getCurrentUser());
 		
-		parseWish.saveInBackground(new SaveCallback() {
+		mParseWish.saveInBackground(new SaveCallback() {
 
 			@Override
 			public void done(ParseException error) {

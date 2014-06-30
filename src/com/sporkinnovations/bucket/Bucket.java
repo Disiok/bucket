@@ -69,4 +69,8 @@ public class Bucket {
 		NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 	}
+	
+	public void remove(int index) {
+		mWishes.remove(index);
+	}
 }
