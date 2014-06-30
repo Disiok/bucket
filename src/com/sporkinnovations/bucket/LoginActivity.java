@@ -57,6 +57,16 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
+		
+		if (Flags.DEBUG) {
+			ParseUser user = ParseUser.getCurrentUser();
+			if (user != null) {
+				Log.d("Current User: ", user.toString());
+			} else {
+				Log.d("Current User: ", "null");
+			}
+
+		}
 
 		// Find the Facebook login button
 		mFacebookLoginButton = (Button) findViewById(R.id.facebook_login);
@@ -258,9 +268,11 @@ public class LoginActivity extends Activity {
 							if (user.isNew()) {
 								Log.d("MyApp",
 										"User signed up and logged in through Facebook!");
+								System.out.println(user.getObjectId());
 							} else {
 								Log.d("MyApp",
 										"User logged in through Facebook!");
+								System.out.println(user.getObjectId());
 							}
 							Intent intent = new Intent(activity, MainActivity.class);
 							activity.startActivity(intent);

@@ -50,7 +50,7 @@ public class Bucket {
 			public void done(List<ParseObject> parseWishes, ParseException error) {
 				if (error == null) {
 					for (ParseObject parseWish : parseWishes) {
-						mWishes.add(new Wish(parseWish.getString("message")));
+						mWishes.add(new Wish(parseWish));
 					}
 					bucketAdapter.notifyDataSetChanged();
 				} else {

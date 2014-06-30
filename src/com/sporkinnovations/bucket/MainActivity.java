@@ -5,7 +5,6 @@ import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import com.parse.ParseFacebookUtils;
 
 public class MainActivity extends Activity {
 
@@ -40,7 +37,10 @@ public class MainActivity extends Activity {
 
 		// Setting main activity layout
 		setContentView(R.layout.activity_main);
-
+		
+		SessionManager sessionManager = new SessionManager(this);
+		sessionManager.checkLogin();
+		
 		// Resolving views
 		mBucketView = (BucketView) findViewById(R.id.bucket_view);
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);

@@ -3,21 +3,21 @@ package com.sporkinnovations.bucket;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.internal.Logger;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class Wish implements Comparable{
+	ParseObject mParseWish;
 	String mMessage;
 	ArrayList<Vote> mVotes;
 	
-	public Wish(String message) {
-		mMessage = message;
+	public Wish(ParseObject parseWish) {
+		mParseWish = parseWish;
+		mMessage = parseWish.getString("message");
 		mVotes = new ArrayList<Vote>();
 	}
 	
@@ -55,7 +55,7 @@ public class Wish implements Comparable{
 		parseWish.put("message", mMessage);
 		parseWish.put("user", ParseUser.getCurrentUser());
 		
-		parseWish.saveEventually(new SaveCallback() {
+		parseWish.saveInBackground(new SaveCallback() {
 
 			@Override
 			public void done(ParseException error) {
@@ -68,5 +68,8 @@ public class Wish implements Comparable{
 			}
 			
 		});
+	}
+	public void delete(final Context context) {
+		mParseWish.deleteInBackground();
 	}
 }
