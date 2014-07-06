@@ -1,6 +1,10 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.activity;
 
 import com.parse.ParseUser;
+import com.sporkinnovations.bucket.R;
+import com.sporkinnovations.bucket.R.id;
+import com.sporkinnovations.bucket.R.layout;
+import com.sporkinnovations.bucket.R.menu;
 import com.sporkinnovations.bucket.controller.BucketAdapter;
 import com.sporkinnovations.bucket.controller.SessionManager;
 import com.sporkinnovations.bucket.controller.VoteManager;

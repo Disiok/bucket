@@ -1,4 +1,4 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +25,11 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.sporkinnovations.bucket.R;
+import com.sporkinnovations.bucket.R.id;
+import com.sporkinnovations.bucket.R.layout;
+import com.sporkinnovations.bucket.R.menu;
+import com.sporkinnovations.bucket.R.string;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -35,11 +40,6 @@ public class LoginActivity extends Activity {
 	 * The default email to populate the email field with.
 	 */
 	public static final String EXTRA_EMAIL = "com.sporkinnovations.bucket.extra.EMAIL";
-
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -119,10 +119,6 @@ public class LoginActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	private void attemptLogin() {
-		if (mAuthTask != null) {
-			return;
-		}
-
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView.setError(null);
@@ -175,14 +171,17 @@ public class LoginActivity extends Activity {
 					}
 					else if (error != null) {
 						toast("What the noob");
+						showProgress(false);
 					}
 					else {
 						toast("What the firetruck");
+						showProgress(false);
 					}
+					
 				}
 			});
-//			mAuthTask = new UserLoginTask();
-//			mAuthTask.execute((Void) null);
+//			mPasswordView.setError(getString(R.string.error_incorrect_password));
+//			mPasswordView.requestFocus();
 		}
 	}
 
@@ -197,7 +196,8 @@ public class LoginActivity extends Activity {
 					Log.d("Login", "Successful Facebook registration/login");
 					finishLogin();
 				} else {
-					Log.d("Login", "Facebook login error: " + (error == null ? "" : error.toString()));
+					Log.d("Login", "Facebook login error: " + (error == null ? "null" : error.toString()));
+					showProgress(false);
 				}
 			}
 		});
@@ -206,6 +206,7 @@ public class LoginActivity extends Activity {
 	private void finishLogin() {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 	/**
@@ -236,52 +237,7 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-	
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-	
-			// TODO: check for account matches
-	
-			// TODO: register the new account here.
-			return true;
-		}
-	
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-	
-			if (success) {
-				finish();
-			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-	
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
-		}
-	
-	}
-	
 	public void toast(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();;
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 }
