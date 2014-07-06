@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -106,12 +107,18 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+	}
+
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
-	public void attemptLogin() {
+	private void attemptLogin() {
 		if (mAuthTask != null) {
 			return;
 		}
@@ -158,50 +165,76 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			
+			ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+				@Override
+				public void done(ParseUser user, ParseException error) {
+					if (error == null && user != null) {
+						finishLogin();
+						toast("Successful Login");
+					}
+					else if (error != null) {
+						toast("What the noob");
+					}
+					else {
+						toast("What the firetruck");
+					}
+				}
+			});
+//			mAuthTask = new UserLoginTask();
+//			mAuthTask.execute((Void) null);
 		}
+	}
+
+	private void attemptFacebookLogin() {
+		mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+		showProgress(true);
+		
+		ParseFacebookUtils.logIn(this, new LogInCallback() {
+			@Override
+			public void done(ParseUser user, ParseException error) {
+				if (user != null && user.getObjectId() != null) {
+					Log.d("Login", "Successful Facebook registration/login");
+					finishLogin();
+				} else {
+					Log.d("Login", "Facebook login error: " + (error == null ? "" : error.toString()));
+				}
+			}
+		});
+	}
+
+	private void finishLogin() {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
-		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
-		// the progress spinner.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
+		int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
+		mLoginStatusView.setVisibility(View.VISIBLE);
+		mLoginStatusView.animate()
+		.setDuration(shortAnimTime)
+		.alpha(show ? 1 : 0)
+		.setListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			}
+		});
 
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
-		} else {
-			// The ViewPropertyAnimator APIs are not available, so simply show
-			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
+		mLoginFormView.setVisibility(View.VISIBLE);
+		mLoginFormView.animate()
+		.setDuration(shortAnimTime)
+		.alpha(show ? 0 : 1)
+		.setListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			}
+		});
 	}
 
 	/**
@@ -212,25 +245,25 @@ public class LoginActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
-
+	
 			try {
 				// Simulate network access.
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
 			}
-
+	
 			// TODO: check for account matches
-
+	
 			// TODO: register the new account here.
 			return true;
 		}
-
+	
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
 			showProgress(false);
-
+	
 			if (success) {
 				finish();
 			} else {
@@ -239,45 +272,16 @@ public class LoginActivity extends Activity {
 				mPasswordView.requestFocus();
 			}
 		}
-
+	
 		@Override
 		protected void onCancelled() {
 			mAuthTask = null;
 			showProgress(false);
 		}
-
-	}
-
-	public void attemptFacebookLogin() {
-
-		ParseFacebookUtils.logIn(this, new LogInCallback() {
-			@Override
-			public void done(ParseUser user, ParseException arg1) {
-				if (user == null) {
-					Log.d("MyApp",
-							"Uh oh. The user cancelled the Facebook login.");
-				} else {
-					if (user.isNew()) {
-						Log.d("MyApp",
-								"User signed up and logged in through Facebook!");
-					} else {
-						Log.d("MyApp", "User logged in through Facebook!");
-					}
-					finishLogin();
-
-				}
-			}
-
-		});
-	}
-	private void finishLogin() {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
+	
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+	public void toast(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();;
 	}
 }
