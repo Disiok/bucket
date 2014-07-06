@@ -1,4 +1,6 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.controller;
+
+import com.sporkinnovations.bucket.model.Vote;
 
 public class VoteManager {
 	Vote mVote;

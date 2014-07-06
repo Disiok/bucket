@@ -1,4 +1,4 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

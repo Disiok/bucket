@@ -1,6 +1,10 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.controller;
 
 import java.util.ArrayList;
+
+import com.sporkinnovations.bucket.Constants;
+import com.sporkinnovations.bucket.Flags;
+import com.sporkinnovations.bucket.model.Wish;
 
 import android.content.Context;
 import android.graphics.Color;

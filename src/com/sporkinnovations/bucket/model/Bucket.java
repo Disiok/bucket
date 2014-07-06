@@ -1,4 +1,4 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +14,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.sporkinnovations.bucket.controller.BucketAdapter;
 
 public class Bucket {
 	ArrayList<Wish> mWishes;

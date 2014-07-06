@@ -1,9 +1,10 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.controller;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.parse.ParseUser;
+import com.sporkinnovations.bucket.LoginActivity;
 
 public class SessionManager {
 	private Context mContext;

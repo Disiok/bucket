@@ -1,4 +1,4 @@
-package com.sporkinnovations.bucket;
+package com.sporkinnovations.bucket.model;
 
 import java.util.ArrayList;
 

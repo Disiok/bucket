@@ -1,6 +1,12 @@
 package com.sporkinnovations.bucket;
 
 import com.parse.ParseUser;
+import com.sporkinnovations.bucket.controller.BucketAdapter;
+import com.sporkinnovations.bucket.controller.SessionManager;
+import com.sporkinnovations.bucket.controller.VoteManager;
+import com.sporkinnovations.bucket.model.Bucket;
+import com.sporkinnovations.bucket.model.Wish;
+import com.sporkinnovations.bucket.view.BucketView;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;

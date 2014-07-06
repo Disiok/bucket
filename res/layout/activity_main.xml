@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.sporkinnovations.bucket.BucketView
+    <com.sporkinnovations.bucket.view.BucketView
         android:id="@+id/bucket_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
