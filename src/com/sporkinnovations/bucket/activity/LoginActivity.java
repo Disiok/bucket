@@ -25,6 +25,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.sporkinnovations.bucket.R;
 import com.sporkinnovations.bucket.R.id;
 import com.sporkinnovations.bucket.R.layout;
@@ -170,7 +171,9 @@ public class LoginActivity extends Activity {
 						toast("Successful Login");
 					}
 					else if (error != null) {
-						toast("What the noob");
+						if (error.getCode() == ParseException.OBJECT_NOT_FOUND) {
+							attemptSignUp();
+						}
 						showProgress(false);
 					}
 					else {
@@ -201,6 +204,24 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
+	}
+	
+	private void attemptSignUp() {
+		ParseUser user = new ParseUser();
+		user.setUsername(mEmail);
+		user.setPassword(mPassword);
+		user.setEmail(mEmail);
+		
+		user.signUpInBackground(new SignUpCallback() {
+		  public void done(ParseException error) {
+		    if (error == null) {
+		      finishLogin();
+		    } else {
+		    	toast(error.toString());
+		    }
+		  }
+		});
+		
 	}
 
 	private void finishLogin() {
