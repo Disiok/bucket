@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
 	
 	// Temporary
 	Button mLogoutButton;
-	Button mDeleteWishButton;
 
 	AlertDialog.Builder mNewWishDialog;
 
@@ -62,7 +61,6 @@ public class MainActivity extends Activity {
 		mVotePowerView = (TextView) findViewById(R.id.bucket_vote_power_indicator);
 		
 		mLogoutButton = (Button) findViewById(R.id.log_out_button);
-		mDeleteWishButton = (Button) findViewById(R.id.delete_wish_button);
 
 		// Initializing
 		init();

@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -51,6 +52,7 @@ public class LoginActivity extends Activity {
 	private TextView mLoginStatusMessageView;
 
 	private Button mFacebookLoginButton;
+	private Button mLoginButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,40 +60,43 @@ public class LoginActivity extends Activity {
 
 		setContentView(R.layout.activity_login);
 
-		// Find the Facebook login button
-		mFacebookLoginButton = (Button) findViewById(R.id.facebook_login);
-		setupFacebookLoginButton();
-
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
+		mPasswordView.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
+		// Set up the login buttons
+		mLoginButton = (Button) findViewById(R.id.sign_in_button);
+		mLoginButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				attemptLogin();
+			}
+		});
+		
+		mFacebookLoginButton = (Button) findViewById(R.id.facebook_login);
+		mFacebookLoginButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				attemptFacebookLogin();
+			}
+		});
 	}
 
 	@Override
@@ -243,34 +248,31 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public void setupFacebookLoginButton() {
-		final Activity activity = this;
-		mFacebookLoginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				ParseFacebookUtils.logIn(activity, new LogInCallback() {
-					@Override
-					public void done(ParseUser user, ParseException arg1) {
-						if (user == null) {
-							Log.d("MyApp",
-									"Uh oh. The user cancelled the Facebook login.");
-						} else {
-							if (user.isNew()) {
-								Log.d("MyApp",
-										"User signed up and logged in through Facebook!");
-							} else {
-								Log.d("MyApp",
-										"User logged in through Facebook!");
-							}
-							Intent intent = new Intent(activity, MainActivity.class);
-							activity.startActivity(intent);
-							
-						}
-					}
-				});
+	public void attemptFacebookLogin() {
 
+		ParseFacebookUtils.logIn(this, new LogInCallback() {
+			@Override
+			public void done(ParseUser user, ParseException arg1) {
+				if (user == null) {
+					Log.d("MyApp",
+							"Uh oh. The user cancelled the Facebook login.");
+				} else {
+					if (user.isNew()) {
+						Log.d("MyApp",
+								"User signed up and logged in through Facebook!");
+					} else {
+						Log.d("MyApp", "User logged in through Facebook!");
+					}
+					finishLogin();
+
+				}
 			}
+
 		});
+	}
+	private void finishLogin() {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 	
 	@Override
